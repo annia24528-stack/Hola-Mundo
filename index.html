@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi App Hola Mundo</title>
+    <style>
+        body { font-family: Arial; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
+        .caja { background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
+        h1 { color: #007bff; font-size: 3rem; }
+    </style>
+</head>
+<body>
+    <div class="caja">
+        <h1 id="texto-saludo">Esperando respuesta...</h1>
+    </div>
+
+    <script>
+        // PEGA AQUÍ TU URL DE CLOUD MOCK (LA QUE TERMINA EN /saludo)
+        const urlApidog = "https://mock.apidog.com/m1/1265509-1263354-default/saludo";
+
+        console.log("Intentando conectar a:", urlApidog);
+
+        fetch(urlApidog)
+            .then(res => res.json())
+            .then(datos => {
+                console.log("Datos recibidos:", datos);
+                // Si en Apidog pusiste "mensaje", lo mostrará. 
+                // Si no, mostrará el objeto completo para que veamos el error.
+                document.getElementById('texto-saludo').innerText = datos.mensaje || JSON.stringify(datos);
+            })
+            .catch(err => {
+                console.error("Error detallado:", err);
+                document.getElementById('texto-saludo').innerText = "Error de conexión";
+            });
+    </script>
+</body>
+</html>
