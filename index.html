@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vida Saludable y Lavandas</title>
+    <title>Vida Saludable y Cuidado de Lavandas</title>
     <style>
-        /* Estilos para que se vea moderno */
+        /* Estilos generales (basados en tu diseño actual) */
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
             display: flex;
@@ -16,90 +16,136 @@
             align-items: center;
         }
 
+        /* Banner morado */
         header {
-            background-color: #6a1b9a; /* Color morado lavanda */
+            background-color: #8e44ad; /* Morado intenso */
             color: white;
             width: 100%;
-            padding: 40px 0;
+            padding: 60px 0;
             text-align: center;
-            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        /* Contenedor de los dos cuadros */
-        .seccion-cuadros {
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        /* Contenedor de las tarjetas */
+        .contenedor-tarjetas {
             display: flex;
-            gap: 25px;
+            gap: 30px;
             justify-content: center;
-            flex-wrap: wrap; /* Para que en celular se pongan uno abajo del otro */
-            padding: 20px;
+            flex-wrap: wrap;
+            padding: 40px 20px;
+            max-width: 1200px;
         }
 
-        /* Estilo de cada cuadro (Iguales) */
+        /* Estilo de cada tarjeta (Iguales en tamaño y forma) */
         .tarjeta {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            width: 320px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            width: 350px;
             overflow: hidden;
             text-align: center;
-            transition: 0.3s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
         .tarjeta:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
 
+        /* Imagen de la tarjeta */
         .tarjeta img {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
+            height: 250px; /* Altura fija para que sean iguales */
+            object-fit: cover; /* Ajusta la imagen sin deformarla */
         }
 
-        .contenido {
-            padding: 20px;
+        /* Contenido de texto de la tarjeta */
+        .cuerpo-tarjeta {
+            padding: 25px;
+            flex-grow: 1; /* Empuja el botón hacia abajo */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
+        .cuerpo-tarjeta h2 {
+            margin: 0 0 10px;
+            font-size: 1.8em;
+            color: #333;
+        }
+
+        .cuerpo-tarjeta p {
+            margin: 0 0 20px;
+            font-size: 1em;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Estilo de los botones */
         .boton {
             display: inline-block;
-            padding: 10px 20px;
-            background-color: #43a047; /* Verde para salud */
+            padding: 12px 24px;
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-weight: bold;
-            margin-top: 10px;
+            transition: background-color 0.3s ease;
+            align-self: center; /* Centra el botón */
         }
 
+        /* Botón verde para Salud */
+        .boton-salud {
+            background-color: #27ae60;
+        }
+
+        .boton-salud:hover {
+            background-color: #219150;
+        }
+
+        /* Botón morado para Lavandas */
         .boton-lavanda {
-            background-color: #8e24aa; /* Morado para lavanda */
+            background-color: #9b59b6;
         }
 
-        .boton:hover {
-            opacity: 0.8;
+        .boton-lavanda:hover {
+            background-color: #8e44ad;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Mi Página Web: Bienestar y Naturaleza</h1>
-        <p>Aprende a cuidar tu cuerpo y tus plantas</p>
+        <h1>Vida Saludable y Cuidado de Lavandas</h1>
+        <p>Aprende a cuidar de ti y de tus plantas favoritas</p>
     </header>
 
-    <div class="seccion-cuadros">
+    <div class="contenedor-tarjetas">
         
         <div class="tarjeta">
-            <img src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?q=80&w=400" alt="Nutrición">
-            <div class="contenido">
+            <img src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?q=80&w=400" alt="Vida Saludable">
+            <div class="cuerpo-tarjeta">
                 <h2>Vida Saludable</h2>
                 <p>Consejos para una mejor nutrición y hábitos diarios.</p>
-                <a href="salud.html" class="boton">Ver apartado</a>
+                <a href="salud.html" class="boton boton-salud">Ver apartado</a>
             </div>
         </div>
 
         <div class="tarjeta">
             <img src="https://images.unsplash.com/photo-1591038334812-73017738f166?q=80&w=400" alt="Lavandas">
-            <div class="contenido">
+            <div class="cuerpo-tarjeta">
                 <h2>Lavandas</h2>
                 <p>Guía de cuidados y beneficios de la planta de lavanda.</p>
                 <a href="lavanda.html" class="boton boton-lavanda">Ver apartado</a>
@@ -109,15 +155,13 @@
     </div>
 
     <script>
-        // Configuración de APIdog
         const urlApidog = "https://mock.apidog.com/m1/1265509-1263354-default/saludo";
         console.log("Conectado a APIdog:", urlApidog);
 
-        // Prueba rápida de la API en consola
         fetch(urlApidog)
-            .then(res => res.json())
-            .then(data => console.log("Mensaje recibido:", data))
-            .catch(err => console.log("Error API:", err));
+            .then(response => response.json())
+            .then(data => console.log("Respuesta de la API:", data))
+            .catch(error => console.error("Error conectando a la API:", error));
     </script>
 
 </body>
