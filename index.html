@@ -3,166 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vida Saludable y Cuidado de Lavandas</title>
+    <title>🪻 Botánica OS | Global Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪻</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Estilos generales (basados en tu diseño actual) */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #F1DCC0;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        :root { --amz-dark: #131921; --amz-gold: #febd69; --bg: #0f1111; --card: #1a1a1a; --text: #f3f3f3; }
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+        
+        /* SIDEBAR TIPO AMAZON */
+        nav { width: 280px; background: var(--amz-dark); border-right: 1px solid #333; display: flex; flex-direction: column; flex-shrink: 0; }
+        .nav-logo { padding: 30px 20px; color: var(--amz-gold); font-size: 1.6rem; font-weight: bold; border-bottom: 1px solid #232f3e; display: flex; align-items: center; gap: 10px; }
+        .nav-item { padding: 18px 25px; cursor: pointer; transition: 0.3s; color: #ccc; display: flex; align-items: center; gap: 15px; font-size: 0.95rem; }
+        .nav-item:hover { background: #232f3e; color: white; }
+        .nav-item.active { background: #232f3e; color: white; border-left: 5px solid var(--amz-gold); }
 
-        /* Banner morado */
-        header {
-            background-color: #d69135; /* Morado intenso */
-            color: white;
-            width: 100%;
-            padding: 60px 0;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+        /* CONTENIDO PRINCIPAL */
+        main { flex-grow: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; background: radial-gradient(circle at top right, #161d1d, #0f1111); }
+        .view { display: none; max-width: 900px; margin: 0 auto; animation: fadeIn 0.4s ease; }
+        .view.active { display: block; }
+        
+        .card { background: var(--card); padding: 35px; border-radius: 10px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { color: var(--amz-gold); font-weight: 400; margin-top: 0; text-transform: uppercase; letter-spacing: 2px; font-size: 1.2rem; }
 
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
+        /* FORMULARIO */
+        input, select, textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 4px; border: 1px solid #888; background: white; color: black; font-size: 1rem; box-sizing: border-box; }
+        .btn-amazon { background: var(--amz-gold); color: #111; border: none; padding: 16px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1rem; margin-top: 15px; }
+        .btn-amazon:hover { background: #f3a847; transform: translateY(-1px); }
 
-        header p {
-            margin: 10px 0 0;
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
+        /* FOTO */
+        .img-drop { border: 2px dashed #444; border-radius: 8px; padding: 30px; text-align: center; cursor: pointer; margin: 15px 0; background: rgba(255,255,255,0.02); }
+        #preview { width: 100%; max-height: 350px; object-fit: contain; display: none; margin-top: 15px; border-radius: 6px; border: 1px solid var(--amz-gold); }
 
-        /* Contenedor de las tarjetas */
-        .contenedor-tarjetas {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            flex-wrap: wrap;
-            padding: 40px 20px;
-            max-width: 1200px;
-        }
+        /* CARDS HISTORIAL */
+        .obs-card { background: #232f3e; padding: 25px; border-radius: 8px; margin-bottom: 20px; position: relative; border: 1px solid #3a4553; }
+        .obs-header { display: flex; justify-content: space-between; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px; }
+        .user-tag { color: var(--amz-gold); font-weight: bold; }
+        .badge { background: #1a1a1a; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; margin-right: 10px; border: 1px solid #444; }
+        .trash-btn { position: absolute; top: 20px; right: 20px; color: #ff6b6b; cursor: pointer; display: none; }
 
-        /* Estilo de cada tarjeta (Iguales en tamaño y forma) */
-        .tarjeta {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            width: 350px;
-            overflow: hidden;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .tarjeta:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        /* Imagen de la tarjeta */
-        .tarjeta img {
-            width: 100%;
-            height: 250px; /* Altura fija para que sean iguales */
-            object-fit: cover; /* Ajusta la imagen sin deformarla */
-        }
-
-        /* Contenido de texto de la tarjeta */
-        .cuerpo-tarjeta {
-            padding: 25px;
-            flex-grow: 1; /* Empuja el botón hacia abajo */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .cuerpo-tarjeta h2 {
-            margin: 0 0 10px;
-            font-size: 1.8em;
-            color: #333;
-        }
-
-        .cuerpo-tarjeta p {
-            margin: 0 0 20px;
-            font-size: 1em;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        /* Estilo de los botones */
-        .boton {
-            display: inline-block;
-            padding: 12px 24px;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            align-self: center; /* Centra el botón */
-        }
-
-        /* Botón verde para Salud */
-        .boton-salud {
-            background-color: #27ae60;
-        }
-
-        .boton-salud:hover {
-            background-color: #219150;
-        }
-
-        /* Botón morado para Lavandas */
-        .boton-lavanda {
-            background-color: #9b59b6;
-        }
-
-        .boton-lavanda:hover {
-            background-color: #8e44ad;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Vida Saludable y Cuidado de Lavandas</h1>
-        <p>Aprende a cuidar de ti y de tus plantas favoritas</p>
-    </header>
+<nav>
+    <div class="nav-logo">🪻 BOTÁNICA PRO</div>
+    <div class="nav-item active" onclick="nav('v-reg', this)"><i class="fas fa-id-card"></i> Registro Staff</div>
+    <div class="nav-item" onclick="nav('v-bit', this)"><i class="fas fa-edit"></i> Bitácora Campo</div>
+    <div class="nav-item" onclick="nav('v-hist', this)"><i class="fas fa-layer-group"></i> Historial Maestro</div>
+    <div id="admin-only" style="display:none">
+        <div class="nav-item" onclick="nav('v-admin', this)" style="color:var(--amz-gold)"><i class="fas fa-user-shield"></i> Gestionar Staff</div>
+    </div>
+    <div style="margin-top:auto" class="nav-item" onclick="unlockAdmin()"><i class="fas fa-key"></i> Modo Admin</div>
+</nav>
 
-    <div class="contenedor-tarjetas">
-        
-        <div class="tarjeta">
-            <img src="https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Vida Saludable">
-            <div class="cuerpo-tarjeta">
-                <h2>Vida Saludable</h2>
-                <p>Consejos para una mejor nutrición y hábitos diarios.</p>
-                <a href="salud.html" class="boton boton-salud">Ver apartado</a>
-            </div>
+<main>
+    <div id="v-reg" class="view active">
+        <div class="card">
+            <h2>Registro de Personal Científico</h2>
+            <input type="text" id="reg-name" placeholder="Nombre completo o ID de Equipo">
+            <select id="reg-type">
+                <option value="IND">Investigador Individual 👤</option>
+                <option value="EQP">Equipo de Trabajo 👥</option>
+            </select>
+            <button class="btn-amazon" onclick="saveUser()">ALTA DE SISTEMA</button>
         </div>
-
-        <div class="tarjeta">
-            <img src="https://images.pexels.com/photos/207518/pexels-photo-207518.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Lavandas">
-            <div class="cuerpo-tarjeta">
-                <h2>Lavandas</h2>
-                <p>Guía de cuidados y beneficios de la planta de lavanda.</p>
-                <a href="lavanda.html" class="boton boton-lavanda">Ver apartado</a>
-            </div>
-        </div>
-
     </div>
 
-    <script>
-        const urlApidog = "https://mock.apidog.com/m1/1265509-1263354-default/saludo";
-        console.log("Conectado a APIdog:", urlApidog);
+    <div id="v-bit" class="view">
+        <div class="card">
+            <h2>Nueva Entrada de Observación 🪻</h2>
+            <select id="bit-user"><option>Cargando lista...</option></select>
+            <div style="display:flex; gap:15px;">
+                <input type="number" id="bit-h" placeholder="Altura (cm)">
+                <input type="number" id="bit-w" placeholder="Ancho W (cm)">
+            </div>
+            <div style="display:flex; gap:15px;">
+                <select id="bit-salud">
+                    <option value="Saludable">🌱 Saludable</option>
+                    <option value="Enferma">🍂 Enferma</option>
+                    <option value="Seca">🔥 Seca</option>
+                </select>
+                <select id="bit-riego">
+                    <option value="Abono Orgánico">🍃 Abono Orgánico</option>
+                    <option value="Abono Químico">🧪 Abono Químico</option>
+                    <option value="Sin Abono">🚫 Sin Abono</option>
+                </select>
+            </div>
+            <textarea id="bit-obs" rows="4" placeholder="Notas de campo..."></textarea>
+            <div class="img-drop" onclick="document.getElementById('f-in').click()">
+                <i class="fas fa-camera" style="font-size: 2rem; color: var(--amz-gold);"></i><br>
+                <span>Subir Foto Evidencia</span>
+                <input type="file" id="f-in" hidden accept="image/*" onchange="previewImg(this)">
+                <img id="preview">
+            </div>
+            <button class="btn-amazon" onclick="submitData()">GUARDAR REPORTE</button>
+        </div>
+    </div>
 
-        fetch(urlApidog)
-            .then(response => response.json())
-            .then(data => console.log("Respuesta de la API:", data))
-            .catch(error => console.error("Error conectando a la API:", error));
-    </script>
+    <div id="v-hist" class="view">
+        <h2>Archivo Maestro de Campo</h2>
+        <div id="hist-list"></div>
+    </div>
 
+    <div id="v-admin" class="view">
+        <div class="card">
+            <h2>Gestión de Usuarios</h2>
+            <div id="admin-user-list"></div>
+        </div>
+    </div>
+</main>
+
+<script>
+    const API = 'https://mi-api-hola.onrender.com';
+    let base64Image = "";
+    let adminMode = false;
+
+    function nav(id, el) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        el.classList.add('active');
+        if(id === 'v-bit') fetchUsers();
+        if(id === 'v-hist') loadHistory();
+        if(id === 'v-admin') fetchUsersAdmin();
+    }
+
+    async function unlockAdmin() {
+        const { value: pw } = await Swal.fire({
+            title: 'CLAVE GHOST',
+            input: 'text',
+            background: '#1a1a1a', color: '#febd69', confirmButtonColor: '#febd69'
+        });
+        if(pw === 'osio2023') {
+            adminMode = true;
+            document.getElementById('admin-only').style.display = 'block';
+            Swal.fire('Admin Unlock', 'Modo edición activado', 'success');
+            loadHistory();
+        }
+    }
+
+    function previewImg(input) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            base64Image = e.target.result;
+            const p = document.getElementById('preview');
+            p.src = base64Image; p.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    async function submitData() {
+        const d = {
+            usuario_id: document.getElementById('bit-user').value,
+            altura: document.getElementById('bit-h').value || 0,
+            ancho_cm: document.getElementById('bit-w').value || 0,
+            estado: document.getElementById('bit-salud').value,
+            observaciones: `${document.getElementById('bit-riego').value}. ${document.getElementById('bit-obs').value}`,
+            imagen: base64Image
+        };
+
+        const res = await fetch(`${API}/nueva-observacion`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(d)
+        });
+
+        if(res.ok) {
+            Swal.fire('Éxito', 'Reporte guardado', 'success');
+            document.getElementById('bit-h').value = "";
+            document.getElementById('bit-w').value = "";
+            document.getElementById('bit-obs').value = "";
+            document.getElementById('preview').style.display = "none";
+            base64Image = "";
+            nav('v-hist', document.querySelectorAll('.nav-item')[2]);
+        }
+    }
+
+    async function loadHistory() {
+        const list = document.getElementById('hist-list');
+        list.innerHTML = '<p>Sincronizando...</p>';
+        try {
+            const r = await fetch(`${API}/lavandas_json`);
+            const data = await r.json();
+            list.innerHTML = data.reverse().map(o => `
+                <div class="obs-card">
+                    ${adminMode ? `<i class="fas fa-trash trash-btn" style="display:block" onclick="deleteObs(${o.id})"></i>` : ''}
+                    <div class="obs-header">
+                        <span class="user-tag">${o.nombre || 'Anónimo'}</span>
+                        <span style="opacity:0.5; font-size:0.8rem;">${new Date(o.fecha).toLocaleDateString()}</span>
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <span class="badge">📏 H: ${o.altura_cm || 0}cm</span>
+                        <span class="badge">↔️ W: ${o.ancho_cm || 0}cm</span>
+                        <span class="badge">🩺 ${o.estado_salud || 'N/A'}</span>
+                    </div>
+                    <p style="font-size:0.9rem; color:#bbb;">"${o.observaciones || 'Sin notas'}"</p>
+                    ${o.foto_base64 ? `<img src="${o.foto_base64}" style="width:100%; border-radius:8px; margin-top:15px; border:1px solid #444;">` : ''}
+                </div>
+            `).join('');
+        } catch (e) { list.innerHTML = "Error al cargar historial."; }
+    }
+
+    async function fetchUsers() {
+        const r = await fetch(`${API}/lista-usuarios`);
+        const d = await r.json();
+        document.getElementById('bit-user').innerHTML = d.map(u => `<option value="${u.id}">${u.nombre}</option>`).join('');
+    }
+
+    async function fetchUsersAdmin() {
+        const r = await fetch(`${API}/lista-usuarios`);
+        const d = await r.json();
+        document.getElementById('admin-user-list').innerHTML = d.map(u => `
+            <div style="display:flex; justify-content:space-between; background:#232f3e; padding:15px; margin-bottom:10px; border-radius:5px;">
+                <span>${u.nombre}</span>
+                <i class="fas fa-user-minus" style="color:#ff6b6b; cursor:pointer;" onclick="deleteUser(${u.id})"></i>
+            </div>
+        `).join('');
+    }
+
+    async function saveUser() {
+        const n = document.getElementById('reg-name').value;
+        const t = document.getElementById('reg-type').value;
+        if(!n) return;
+        const finalName = t === 'EQP' ? `👥 EQUIPO: ${n}` : `👤 ${n}`;
+        await fetch(`${API}/registrar`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ nombre: finalName })
+        });
+        document.getElementById('reg-name').value = "";
+        Swal.fire('Registrado', 'Usuario añadido', 'success');
+    }
+
+    async function deleteObs(id) {
+        await fetch(`${API}/eliminar-observacion/${id}`, { method: 'DELETE' });
+        loadHistory();
+    }
+
+    async function deleteUser(id) {
+        await fetch(`${API}/eliminar-usuario/${id}`, { method: 'DELETE' });
+        fetchUsersAdmin();
+    }
+</script>
 </body>
 </html>
