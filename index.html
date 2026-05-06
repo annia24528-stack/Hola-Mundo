@@ -3,45 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🪻 Botánica OS | Global Dashboard</title>
+    <title>🪻 Botánica OS | Neon Connected</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪻</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --amz-dark: #131921; --amz-gold: #febd69; --bg: #0f1111; --card: #1a1a1a; --text: #f3f3f3; }
         body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
-        
-        /* SIDEBAR TIPO AMAZON */
         nav { width: 280px; background: var(--amz-dark); border-right: 1px solid #333; display: flex; flex-direction: column; flex-shrink: 0; }
         .nav-logo { padding: 30px 20px; color: var(--amz-gold); font-size: 1.6rem; font-weight: bold; border-bottom: 1px solid #232f3e; display: flex; align-items: center; gap: 10px; }
         .nav-item { padding: 18px 25px; cursor: pointer; transition: 0.3s; color: #ccc; display: flex; align-items: center; gap: 15px; font-size: 0.95rem; }
         .nav-item:hover { background: #232f3e; color: white; }
         .nav-item.active { background: #232f3e; color: white; border-left: 5px solid var(--amz-gold); }
-
-        /* CONTENIDO PRINCIPAL */
         main { flex-grow: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; background: radial-gradient(circle at top right, #161d1d, #0f1111); }
         .view { display: none; max-width: 900px; margin: 0 auto; animation: fadeIn 0.4s ease; }
         .view.active { display: block; }
-        
         .card { background: var(--card); padding: 35px; border-radius: 10px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         h2 { color: var(--amz-gold); font-weight: 400; margin-top: 0; text-transform: uppercase; letter-spacing: 2px; font-size: 1.2rem; }
-
-        /* FORMULARIO */
         input, select, textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 4px; border: 1px solid #888; background: white; color: black; font-size: 1rem; box-sizing: border-box; }
         .btn-amazon { background: var(--amz-gold); color: #111; border: none; padding: 16px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1rem; margin-top: 15px; }
         .btn-amazon:hover { background: #f3a847; transform: translateY(-1px); }
-
-        /* FOTO */
         .img-drop { border: 2px dashed #444; border-radius: 8px; padding: 30px; text-align: center; cursor: pointer; margin: 15px 0; background: rgba(255,255,255,0.02); }
         #preview { width: 100%; max-height: 350px; object-fit: contain; display: none; margin-top: 15px; border-radius: 6px; border: 1px solid var(--amz-gold); }
-
-        /* CARDS HISTORIAL */
         .obs-card { background: #232f3e; padding: 25px; border-radius: 8px; margin-bottom: 20px; position: relative; border: 1px solid #3a4553; }
         .obs-header { display: flex; justify-content: space-between; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px; }
         .user-tag { color: var(--amz-gold); font-weight: bold; }
         .badge { background: #1a1a1a; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; margin-right: 10px; border: 1px solid #444; }
         .trash-btn { position: absolute; top: 20px; right: 20px; color: #ff6b6b; cursor: pointer; display: none; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -116,9 +104,18 @@
 </main>
 
 <script>
-    const API = 'https://mi-api-hola.onrender.com';
+    // CONFIGURACIÓN DE NEON DATA API
+    const API = 'https://ep-nameless-haze-amtis2xa.apirest.c-5.us-east-1.aws.neon.tech/neondb/rest/v1';
+    const NEON_KEY = 'napi_ca8p7w98lwaezp5qm10t6enmbt5ga0txedel6jlf7u1ha41isu8mzn626ufxs1iu';
+    
     let base64Image = "";
     let adminMode = false;
+
+    // Headers reutilizables para Neon
+    const neonHeaders = {
+        'Neon-Api-Key': NEON_KEY,
+        'Content-Type': 'application/json'
+    };
 
     function nav(id, el) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -156,22 +153,21 @@
 
     async function submitData() {
         const d = {
-            usuario_id: document.getElementById('bit-user').value,
-            altura: document.getElementById('bit-h').value || 0,
-            ancho_cm: document.getElementById('bit-w').value || 0,
-            estado: document.getElementById('bit-salud').value,
+            altura_cm: parseFloat(document.getElementById('bit-h').value) || 0,
+            ancho_cm: parseFloat(document.getElementById('bit-w').value) || 0,
+            estado_salud: document.getElementById('bit-salud').value,
             observaciones: `${document.getElementById('bit-riego').value}. ${document.getElementById('bit-obs').value}`,
-            imagen: base64Image
+            foto_base64: base64Image
         };
 
-        const res = await fetch(`${API}/nueva-observacion`, {
+        const res = await fetch(`${API}/observaciones`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: neonHeaders,
             body: JSON.stringify(d)
         });
 
         if(res.ok) {
-            Swal.fire('Éxito', 'Reporte guardado', 'success');
+            Swal.fire('Éxito', 'Reporte guardado en Neon', 'success');
             document.getElementById('bit-h').value = "";
             document.getElementById('bit-w').value = "";
             document.getElementById('bit-obs').value = "";
@@ -183,16 +179,16 @@
 
     async function loadHistory() {
         const list = document.getElementById('hist-list');
-        list.innerHTML = '<p>Sincronizando...</p>';
+        list.innerHTML = '<p>Sincronizando con Neon...</p>';
         try {
-            const r = await fetch(`${API}/lavandas_json`);
+            const r = await fetch(`${API}/observaciones`, { headers: neonHeaders });
             const data = await r.json();
             list.innerHTML = data.reverse().map(o => `
                 <div class="obs-card">
                     ${adminMode ? `<i class="fas fa-trash trash-btn" style="display:block" onclick="deleteObs(${o.id})"></i>` : ''}
                     <div class="obs-header">
-                        <span class="user-tag">${o.nombre || 'Anónimo'}</span>
-                        <span style="opacity:0.5; font-size:0.8rem;">${new Date(o.fecha).toLocaleDateString()}</span>
+                        <span class="user-tag">ID Registro: #${o.id}</span>
+                        <span style="opacity:0.5; font-size:0.8rem;">${o.fecha ? new Date(o.fecha).toLocaleDateString() : 'Hoy'}</span>
                     </div>
                     <div style="margin-bottom:15px;">
                         <span class="badge">📏 H: ${o.altura_cm || 0}cm</span>
@@ -203,17 +199,23 @@
                     ${o.foto_base64 ? `<img src="${o.foto_base64}" style="width:100%; border-radius:8px; margin-top:15px; border:1px solid #444;">` : ''}
                 </div>
             `).join('');
-        } catch (e) { list.innerHTML = "Error al cargar historial."; }
+        } catch (e) { list.innerHTML = "Error al conectar con Neon."; }
     }
 
     async function fetchUsers() {
-        const r = await fetch(`${API}/lista-usuarios`);
-        const d = await r.json();
-        document.getElementById('bit-user').innerHTML = d.map(u => `<option value="${u.id}">${u.nombre}</option>`).join('');
+        try {
+            const r = await fetch(`${API}/usuarios`, { headers: neonHeaders });
+            const d = await r.json();
+            document.getElementById('bit-user').innerHTML = d.length ? 
+                d.map(u => `<option value="${u.id}">${u.nombre}</option>`).join('') :
+                '<option>No hay personal registrado</option>';
+        } catch(e) {
+            document.getElementById('bit-user').innerHTML = '<option>Error de conexión</option>';
+        }
     }
 
     async function fetchUsersAdmin() {
-        const r = await fetch(`${API}/lista-usuarios`);
+        const r = await fetch(`${API}/usuarios`, { headers: neonHeaders });
         const d = await r.json();
         document.getElementById('admin-user-list').innerHTML = d.map(u => `
             <div style="display:flex; justify-content:space-between; background:#232f3e; padding:15px; margin-bottom:10px; border-radius:5px;">
@@ -228,22 +230,28 @@
         const t = document.getElementById('reg-type').value;
         if(!n) return;
         const finalName = t === 'EQP' ? `👥 EQUIPO: ${n}` : `👤 ${n}`;
-        await fetch(`${API}/registrar`, {
+        await fetch(`${API}/usuarios`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: neonHeaders,
             body: JSON.stringify({ nombre: finalName })
         });
         document.getElementById('reg-name').value = "";
-        Swal.fire('Registrado', 'Usuario añadido', 'success');
+        Swal.fire('Registrado', 'Usuario añadido a Neon', 'success');
     }
 
     async function deleteObs(id) {
-        await fetch(`${API}/eliminar-observacion/${id}`, { method: 'DELETE' });
+        await fetch(`${API}/observaciones?id=eq.${id}`, { 
+            method: 'DELETE',
+            headers: neonHeaders
+        });
         loadHistory();
     }
 
     async function deleteUser(id) {
-        await fetch(`${API}/eliminar-usuario/${id}`, { method: 'DELETE' });
+        await fetch(`${API}/usuarios?id=eq.${id}`, { 
+            method: 'DELETE',
+            headers: neonHeaders
+        });
         fetchUsersAdmin();
     }
 </script>
